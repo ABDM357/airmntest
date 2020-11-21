@@ -1,0 +1,41 @@
+0. 浏览器发送服务器的请求数据  的分析
+
+
+GET / HTTP/1.1
+	GET   get获取 一般用来获取服务器提供的网页数据  表示一种HTTP的请求方式
+	POST  一般用于浏览器给服务器发送数据
+
+	/代表服务器的资源根目录
+	默认情况下 传给服务器的都是/    www.baidu.com/index.html ----》 /index.html
+	HTTP/1.1 协议版本
+
+请求行之后的数据 都是头部数据  头名称: 头值
+	Host: itcastcpp.cn
+		请求的主机
+
+	Connection: keep-alive
+		连接方式 表示是长连接还是短连接
+
+	User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36
+		浏览器信息
+
+	Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8
+		接受文件类型
+
+	Accept-Encoding: gzip, deflate
+		接受的压缩方式 --- 节约网络流量
+
+	Accept-Language: zh-CN,zh;q=0.9,en;q=0.8,zh-TW;q=0.7
+
+		接受的语言
+
+
+1. HTTP请求格式
+	请求头可以有多个	
+	
+	请求行[请求方法 请求路径 HTTP版本\r\n]
+	请求头[头名称: 头值\r\n] 
+	空行\r\n
+	请求体
+
+	GET请求中请求体一般为空  如果是POST 请求体数据就是发送给服务器的数据	

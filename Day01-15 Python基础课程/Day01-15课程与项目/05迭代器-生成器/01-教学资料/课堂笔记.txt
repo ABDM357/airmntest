@@ -1,0 +1,99 @@
+ 0. 进程间通信-Queue队列
+    	创建 
+    		q = multiprocessing.Queue() 参数表示队列长度 -- 数据条数
+    	往里面放数据
+    		q.put(data)
+    	取出数据
+    		q.get()
+    	判断满
+    		q.full()
+    	判断空
+    		q.empty()
+    	获取队列中的数据数量 mac会崩溃
+    		q.qsize()
+
+    	put(obj[, block[, timeout]])
+    		obj表示数据对象
+    		block表示是否阻塞等待 True表示阻塞等待 False表示不阻塞 不等待
+    		timeout 表示如果等待  等待最长的时间 
+
+            如果超时等待或者 不阻塞等待都没有获取到数据 则抛出异常
+
+        put(data,block=True,timeout=-1)
+
+            put(data,True,10)
+            put(data,False) 不等待 put_nowait(data)
+                如果超时放入 或者 非阻塞放入数据 没有完成任务 都会抛出异常
+
+        get(block=True, timeout=-1])
+            block表示是否阻塞等待 True表示阻塞等待 False表示不阻塞 不等待
+            timeout 表示如果等待  等待最长的时间  -1表示死等
+
+            get() == get(True)
+            get(True,10) 最多超时等待10s 如果没有取到数据 就抛出异常
+            get(False) 不阻塞等待  直接获取数据 如果没有取到数据 就抛出异常
+
+
+1. 进程池
+        
+        创建进程池 pool = Pool(进程的最大数量)
+        添加任务   
+            apply是阻塞的任务添加方式  会等待添加的任务执行完成才会继续往下执行
+            apply_async 是非阻塞的任务添加方式  只管添加  不等任务结束
+
+        关闭进程池
+            .close()
+            pool.terminate()  终止进程池中所有的正在执行的进程任务  
+
+        等待所有任务执行完成 
+            .join()       保持主进程存活 等待所有的工作进程 全部退出
+
+    注意事项:
+        1. 如果需要在进程池中 使用进程间通信Queue 不要使用multiprocessing.Queue() (要求是通过继承的方式创建的进程)
+        应该使用 multiprocessing.Manager().Queue()
+
+        2. .join()之前 一定要调用 .close() 或者.terminate()
+        3. 在正常情况下 是不需要teminate()终止所有工作进程的
+
+
+------------------迭代器生成器语法---------------------------------------
+1. 迭代
+    根据记录的前面的元素的位置信息 去访问后续的元素的过程 -遍历
+
+2. 可迭代对象 iterable
+    
+    能够使用for循环遍历的对象
+        for item in obj:
+            print(item)
+
+    isinstance(对象，类型) 判断对象是否是 类型的实例对象
+        from collections import Iterable
+        isinstance(obj, Iterable)
+3. 可迭代对象
+    
+    可迭代对象通过__iter__方法提供一个 可以遍历对象中数据的工具-迭代器
+        iter(可迭代对象) 可以获取可迭代对象的迭代器
+
+    通过迭代器可以迭代访问 数据
+        next(迭代器)  =====  迭代器对象.__next__()
+
+        如果需要实现一个迭代器 就需要实现__next__()   
+
+
+    迭代器
+        判断对象是否是可迭代类型
+        from collections import Iterator
+        isinstance(obj, Iterator)
+
+4. yield关键字的作用
+        
+    挂起当前函数  将后面表达式的值 返回到调用生成器的地方
+    接收数据 并唤醒当前函数  并且紧接着上次运行的地址继续执行
+
+5. 唤醒生成器的两种方式
+
+    生成器对象.send("数据") 
+    next(生成器) === 生成器.send(None)
+
+    在第一次调用生成器对象的是 必须使用next()
+        在后续的情况下 send和next可以混用 

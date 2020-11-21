@@ -1,0 +1,57 @@
+一、昨日知识复习 
+	
+	
+	创建TCP套接字
+		socket()
+	关闭TCP套接字
+	连接服务器
+		connect()
+	使用TCP套接字发送数据
+		send(bytes类型数据)
+	使用TCP套接字接收数据
+		recv()
+
+	将套接字设置为监听模式(被动)
+
+	取出一个客户端进行服务
+
+
+二、TCP知识:
+
+1. 三次握手 与 listen accept函数功能说明
+	三次握手建立连接
+
+	listen函数作用
+
+		将套接字设置为被动套接字(监听模式) ---> 收到客户端的SYN 回复ACK 
+		
+
+	listen参数意义
+		参数 在不同的平台的含义是不一样的
+		Linux 上表示 已完成三次握手的队列长度
+		在其他(UNIX widows)和Linux不同 一般都是指的 未完成 + 已完成队列的总长度
+
+	accept 函数从已完成三次握手队列中取出一个客户端进行服务器
+
+
+2. 四次挥手 与 地址重用问题
+
+	address in use问题说明
+		第一种 Pycharm某个程序已经占用某个端口 而 没有被关闭
+		第二种 Pycharm某个程序在后台还没有退出 而 依然占用某个端口
+			命令行  终止一个程序使用 Ctrl + c
+
+		第三种 TCP状态本身对端口重用问题进行的 限定
+			原因
+				server 重启/关闭进程  或者 主动 (关闭TCP连接)
+				默认情况下 导致TCP变为TIME_WAIT状态 30s-2分钟内不能再使用该socket相关PORT
+
+			解决方案 
+				需要在listen调用之前设置
+				set socket option                          reuse address 
+
+				# 设置套接字选项           套接字              选项 重用地址    1代表设置 0代表取消设置
+				server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+			目的
+				让操作系统忽略TIME_WAIT的等待时间 
+
